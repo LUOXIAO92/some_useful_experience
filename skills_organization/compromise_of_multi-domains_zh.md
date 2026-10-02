@@ -1,8 +1,8 @@
 # Domain Skill 配置方案
 
-以领域作为 Skill 单位，领域内部按照普通技术文档的组织方式分层展开。
+Domain Skill 以领域作为 Skill 单位，通过一个 `SKILL.md` 作为入口，领域内部使用普通文档结构组织具体能力和参考资料。
 
-## 1. 目录结构
+## 1. 基本结构
 
 ```text
 .agents/skills/
@@ -10,30 +10,25 @@
     ├── SKILL.md
     ├── contents.md
     ├── references/
-    │   ├── chapter-a/
-    │   │   ├── index.md
-    │   │   ├── topic-a.md
-    │   │   └── topic-b.md
-    │   ├── chapter-b/
-    │   │   ├── index.md
-    │   │   └── topic-a.md
-    │   └── appendix/
-    │       ├── glossary.md
-    │       ├── examples.md
-    │       └── edge-cases.md
     ├── scripts/
     └── assets/
 ```
 
+其中只有 `SKILL.md` 是 Skill 入口。
+
+其他文件和目录根据实际内容使用，不要求全部存在。
+
+---
+
 ## 2. `SKILL.md`
 
-`SKILL.md` 作为整个领域的入口，保存：
+`SKILL.md` 保存领域级信息：
 
+- Skill 名称与描述；
 - 领域用途；
-- 适用任务；
-- 领域级核心规则；
-- 常用任务到具体章节的路由；
-- `contents.md` 的入口。
+- 核心规则；
+- 常见任务的导航；
+- 相关 reference 的读取指引。
 
 例如：
 
@@ -47,11 +42,11 @@ description: Software engineering workflows covering analysis, implementation, t
 
 ## Routing
 
-- Code analysis → `references/code-analysis/index.md`
-- Implementation → `references/implementation/index.md`
-- Testing → `references/testing/index.md`
-- Debugging → `references/debugging/index.md`
-- Code review → `references/code-review/index.md`
+- Code analysis → `references/code-analysis.md`
+- Implementation → `references/implementation.md`
+- Testing → `references/testing.md`
+- Debugging → `references/debugging.md`
+- Code review → `references/code-review.md`
 
 For the complete documentation map, read `contents.md`.
 
@@ -60,39 +55,110 @@ For the complete documentation map, read `contents.md`.
 - Inspect existing code before modifying it.
 - Preserve project conventions.
 - Verify changes using available tools.
-- Keep tests focused on observable production behavior.
 ```
 
-## 3. `contents.md`
+`SKILL.md` 可以直接指向具体 reference，也可以通过 `contents.md` 提供完整导航。
 
-`contents.md` 保存领域内部的完整目录索引。
+---
+
+## 3. `references/`
+
+`references/` 保存领域内部的具体能力、工作流、规则和知识材料。
+
+目录结构根据内容规模自然展开。
+
+### 薄型 Domain Skill
+
+内容较少时直接平铺：
+
+```text
+domain-skill/
+├── SKILL.md
+└── references/
+    ├── search.md
+    ├── verify.md
+    └── merge.md
+```
+
+`SKILL.md` 直接导航：
+
+```markdown
+## Routing
+
+- Search → `references/search.md`
+- Verification → `references/verify.md`
+- Merge → `references/merge.md`
+```
+
+### 中型 Domain Skill
+
+内容增加后，可以加入 `contents.md`：
+
+```text
+domain-skill/
+├── SKILL.md
+├── contents.md
+└── references/
+    ├── search.md
+    ├── verification.md
+    ├── merge.md
+    ├── validation.md
+    └── examples.md
+```
+
+### 大型 Domain Skill
+
+某个部分继续增长时，再使用子目录：
+
+```text
+domain-skill/
+├── SKILL.md
+├── contents.md
+└── references/
+    ├── search/
+    │   ├── index.md
+    │   ├── query-planning.md
+    │   └── source-selection.md
+    ├── verification/
+    │   ├── index.md
+    │   ├── source-check.md
+    │   └── conflict-resolution.md
+    ├── merge/
+    │   ├── index.md
+    │   └── deduplication.md
+    └── appendix/
+        ├── glossary.md
+        ├── examples.md
+        └── edge-cases.md
+```
+
+---
+
+## 4. `contents.md`
+
+`contents.md` 用于内容较多时提供完整目录。
+
+例如：
 
 ```markdown
 # Contents
 
-## Code Analysis
+## Search
 
-- [Overview](references/code-analysis/index.md)
-- [Architecture](references/code-analysis/architecture.md)
-- [Dependency Tracing](references/code-analysis/dependency-tracing.md)
+- [Overview](references/search/index.md)
+- [Query Planning](references/search/query-planning.md)
+- [Source Selection](references/search/source-selection.md)
 
-## Implementation
+## Verification
 
-- [Overview](references/implementation/index.md)
-- [Feature Implementation](references/implementation/feature.md)
-- [Refactoring](references/implementation/refactoring.md)
+- [Overview](references/verification/index.md)
+- [Source Check](references/verification/source-check.md)
+- [Conflict Resolution](references/verification/conflict-resolution.md)
 
-## Testing
+## Merge
 
-- [Overview](references/testing/index.md)
-- [Unit Testing](references/testing/unit-testing.md)
-- [Integration Testing](references/testing/integration-testing.md)
-- [System Testing](references/testing/system-testing.md)
-
-## Debugging
-
-- [Overview](references/debugging/index.md)
-- [Failure Localization](references/debugging/failure-localization.md)
+- [Overview](references/merge/index.md)
+- [Deduplication](references/merge/deduplication.md)
 
 ## Appendix
 
@@ -101,39 +167,13 @@ For the complete documentation map, read `contents.md`.
 - [Edge Cases](references/appendix/edge-cases.md)
 ```
 
-## 4. `references/`
+`contents.md` 只在领域内容需要完整索引时加入。
 
-`references/` 保存领域内部的具体知识、流程和操作方法。
-
-```text
-references/
-├── code-analysis/
-│   ├── index.md
-│   ├── architecture.md
-│   └── dependency-tracing.md
-├── implementation/
-│   ├── index.md
-│   ├── feature.md
-│   └── refactoring.md
-├── testing/
-│   ├── index.md
-│   ├── unit-testing.md
-│   ├── integration-testing.md
-│   └── system-testing.md
-├── debugging/
-│   ├── index.md
-│   └── failure-localization.md
-└── appendix/
-    ├── glossary.md
-    ├── examples.md
-    └── edge-cases.md
-```
-
-章节较大时使用 `index.md` 作为章节入口。
+---
 
 ## 5. `scripts/`
 
-保存领域 Skill 使用的可执行辅助工具，例如：
+`scripts/` 保存 Skill 使用的辅助程序：
 
 ```text
 scripts/
@@ -142,59 +182,91 @@ scripts/
 └── check_output.py
 ```
 
-对应章节在需要时直接引用这些脚本。
+对应 reference 可以直接说明什么时候调用这些脚本。
+
+---
 
 ## 6. `assets/`
 
-保存模板、样例、静态资源等内容：
+`assets/` 保存静态资源：
 
 ```text
 assets/
 ├── templates/
-├── examples/
-└── schemas/
+├── schemas/
+└── examples/
 ```
 
-## 7. 加载关系
+包括模板、schema、样例文件以及其他工作材料。
+
+---
+
+## 7. 渐进展开
+
+Domain Skill 的基本加载关系：
 
 ```mermaid
 flowchart TD
-    A["SKILL.md"] --> B["直接定位具体章节"]
-    A --> C["contents.md"]
+    A["Skill metadata"] --> B["SKILL.md"]
 
-    C --> D["references/<chapter>/index.md"]
-    B --> D
+    B --> C["直接读取相关 reference"]
+    B --> D["contents.md"]
 
-    D --> E["具体 topic / workflow"]
-    E --> F["appendix / examples / edge-cases"]
-
-    E --> G["scripts/"]
-    E --> H["assets/"]
+    D --> C
+    C --> E["更具体的文档"]
+    E --> F["scripts / assets / appendix"]
 ```
 
-典型路径：
+薄型 Skill 可以直接：
 
 ```text
 SKILL.md
     ↓
-references/testing/index.md
-    ↓
-references/testing/integration-testing.md
+references/task.md
 ```
 
-需要完整浏览领域内容时：
+中大型 Skill 可以：
 
 ```text
 SKILL.md
     ↓
 contents.md
     ↓
-对应章节
+references/<section>/
+    ↓
+具体文档
 ```
 
-## 8. 配置层级
+---
 
-整体层级固定为：
+## 8. 组织原则
+
+Domain Skill 的结构按实际内容复杂度增长：
+
+```text
+简单
+SKILL.md
+└── references/*.md
+```
+
+```text
+中等
+SKILL.md
+├── contents.md
+└── references/*.md
+```
+
+```text
+复杂
+SKILL.md
+├── contents.md
+└── references/
+    ├── section-a/
+    ├── section-b/
+    └── appendix/
+```
+
+整体关系为：
 
 ```text
 Domain Skill
@@ -205,13 +277,9 @@ contents.md / direct routing
     ↓
 references/
     ↓
-chapter
-    ↓
-topic / workflow / procedure
-    ↓
-appendix / scripts / assets
+具体知识与工作流
 ```
 
 核心原则：
 
-> 领域作为 Skill 的最外层入口，领域内部按照目录、章节、小节和附录组织。
+> 领域作为 Skill 的发现单位，领域内部按照实际内容规模使用普通文档结构逐步展开。
